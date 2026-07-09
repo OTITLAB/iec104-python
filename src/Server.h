@@ -109,11 +109,13 @@ public:
       uint_fast16_t tcp_port = IEC_60870_5_104_DEFAULT_PORT,
       uint_fast16_t tick_rate_ms = 100, uint_fast16_t select_timeout_ms = 10000,
       std::uint_fast8_t max_open_connections = 0,
-      std::shared_ptr<Remote::TransportSecurity> transport_security = nullptr) {
+      std::shared_ptr<Remote::TransportSecurity> transport_security = nullptr,
+      std::uint_fast8_t ioa_size = 3) {
     // Not using std::make_shared because the constructor is private.
     auto server = std::shared_ptr<Server>(
         new Server(bind_ip, tcp_port, tick_rate_ms, select_timeout_ms,
-                   max_open_connections, std::move(transport_security)));
+                   max_open_connections, std::move(transport_security),
+                   ioa_size));
 
     // track reference as weak pointer for safe static callbacks
     void *key = static_cast<void *>(server.get());
@@ -512,7 +514,8 @@ private:
   Server(const std::string &bind_ip, std::uint_fast16_t tcp_port,
          std::uint_fast16_t tick_rate_ms, std::uint_fast16_t select_timeout_ms,
          std::uint_fast8_t max_open_connections,
-         std::shared_ptr<Remote::TransportSecurity> transport_security);
+         std::shared_ptr<Remote::TransportSecurity> transport_security,
+         std::uint_fast8_t ioa_size = 3);
 
   /**
    * @brief Schedules timers for data points associated with servers' stations.

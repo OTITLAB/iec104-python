@@ -71,7 +71,8 @@ Server::Server(const std::string &bind_ip, const std::uint_fast16_t tcp_port,
                const std::uint_fast16_t tick_rate_ms,
                const std::uint_fast16_t select_timeout_ms,
                const std::uint_fast8_t max_open_connections,
-               std::shared_ptr<Remote::TransportSecurity> transport_security)
+               std::shared_ptr<Remote::TransportSecurity> transport_security,
+               const std::uint_fast8_t ioa_size)
     : ip(bind_ip), port(tcp_port), tickRate_ms(tick_rate_ms),
       selectTimeout_ms(select_timeout_ms),
       maxOpenConnections(max_open_connections),
@@ -99,6 +100,11 @@ Server::Server(const std::string &bind_ip, const std::uint_fast16_t tcp_port,
   CS104_Slave_setMaxOpenConnections(slave, max_open_connections);
 
   appLayerParameters = CS104_Slave_getAppLayerParameters(slave);
+
+  // Configure IOA size (1, 2, or 3 bytes — default 3 per IEC 60870-5-104)
+  if (ioa_size >= 1 && ioa_size <= 3) {
+    appLayerParameters->sizeOfIOA = ioa_size;
+  }
 
   // use lib60870-C defaults for connection timeouts
   // auto param = CS104_Slave_getConnectionParameters(slave);

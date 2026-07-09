@@ -1815,7 +1815,7 @@ Example
       "information and containing stations")
       .def(
           py::init(&Server::create),
-          R"def(__init__(self: c104.Server, ip: str = "0.0.0.0", port: int = 2404, tick_rate_ms: int = 100, select_timeout_ms = 10000, max_connections: int = 0, transport_security: c104.TransportSecurity = None) -> None
+          R"def(__init__(self: c104.Server, ip: str = "0.0.0.0", port: int = 2404, tick_rate_ms: int = 100, select_timeout_ms = 10000, max_connections: int = 0, transport_security: c104.TransportSecurity = None, ioa_size: int = 3) -> None
 
 create a new 104er server
 
@@ -1833,14 +1833,17 @@ max_connections: int
     maximum number of clients allowed to connect
 transport_security: c104.TransportSecurity, optional
     TLS configuration object
+ioa_size: int
+    size of the Information Object Address field in bytes (1, 2, or 3). Default is 3.
 
 Example
 -------
->>> my_server = c104.Server(ip="0.0.0.0", port=2404, tick_rate_ms=100, select_timeout_ms=10000, max_connections=0)
+>>> my_server = c104.Server(ip="0.0.0.0", port=2404, tick_rate_ms=100, select_timeout_ms=10000, max_connections=0, ioa_size=3)
 )def",
           "ip"_a = "0.0.0.0", "port"_a = IEC_60870_5_104_DEFAULT_PORT,
           "tick_rate_ms"_a = 100, "select_timeout_ms"_a = 10000,
-          "max_connections"_a = 0, "transport_security"_a = nullptr)
+          "max_connections"_a = 0, "transport_security"_a = nullptr,
+          "ioa_size"_a = 3)
       .def_property_readonly(
           "tick_rate_ms", &Server::getTickRate_ms,
           "int: the servers tick rate in milliseconds (read-only)")
